@@ -41,7 +41,7 @@ router.get("/:id", async (req, res, next) => {
 //add product
 router.post(
   "/addproduct",
-  checkRequiredParams(["name", "category", "price"]),
+  checkRequiredParams(["name", "category", "price", "code", "description"]),
   validateRequest([
     body("name").isLength({ min: 3, max: 20 }),
     body("category").isLength({ min: 3, max: 20 }),
@@ -50,7 +50,9 @@ router.post(
     const createdProduct = new Product({
       name: req.body.name,
       category: req.body.category,
-      price: req.body.price
+      price: req.body.price,
+      code: req.body.code,
+      description: req.body.description,
     });
     const product = await createdProduct.save();
     res.status(200).send(product);
@@ -66,7 +68,9 @@ router.patch("/:id", async (req, res, next) => {
       .update({
         name: req.body.name || product.name,
         category: req.body.category || product.category,
-        price: req.body.price || product.price
+        price: req.body.price || product.price,
+        code: req.body.code || product.code,
+        description: req.body.description || product.description,
       })
       .exec();
     res.status(200).send({ message: "product changed succesfuly" });
