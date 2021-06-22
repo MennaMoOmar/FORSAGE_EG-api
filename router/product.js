@@ -38,6 +38,46 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+//add product
+router.post(
+  "/addproduct",
+  checkRequiredParams(["name", "category", "price"]),
+  validateRequest([
+    body("name").isLength({ min: 3, max: 20 }),
+    body("category").isLength({ min: 3, max: 20 }),
+  ]),
+  async (req, res, next) => {
+    const createdProduct = new Product({
+      name: req.body.name,
+      category: req.body.category,
+      price: req.body.price
+    });
+    const product = await createdProduct.save();
+    res.status(200).send(product);
+  }
+);
+
+//edit product
+router.patch("/:id", async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    let product = await Product.findById(id);
+    await product
+      .update({
+        name: req.body.name || product.name,
+        category: req.body.category || product.category,
+        price: req.body.price || product.price
+      })
+      .exec();
+    res.status(200).send({ message: "product changed succesfuly" });
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
 //delete product
 router.delete("/:id", async (req, res, next) => {
   try {
