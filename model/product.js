@@ -17,11 +17,16 @@ const schema = new mongoose.Schema({
   },
   code: {
     type: String,
+    require: true,
   },
   description: {
     type: String,
+    require: true,
   },
-  image: {
+  productImage: {
+    type: Buffer,
+  },
+  brandImage: {
     type: Buffer,
   },
 });

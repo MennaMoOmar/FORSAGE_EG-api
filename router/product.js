@@ -15,6 +15,7 @@ const validateImage = require("../middleware/validationImage");
 
 /* Routes */
 //get all posts
+// api/product
 router.get("/", async (req, res, next) => {
   try {
     const products = await Product.find({});
@@ -123,7 +124,37 @@ router.post(
         });
       }
       const buffer = await sharp(req.file.buffer).png().toBuffer();
-      product.image = buffer;
+      product.productImage = buffer;
+      await product.save();
+      res.send({
+        message: "image added successfully",
+      });
+    } catch (err) {
+      res.status(400).send({
+        error: err,
+      });
+    }
+  },
+  validateImage
+);
+
+//add brandimage by id
+router.post(
+  "/brandImg/:id",
+  upload.single("brandImage"),
+  async (req, res, next) => {
+    try {
+      const product = await Product.findById(req.params.id);
+      if (!product) {
+        return res.status(422).send({
+          error: "product not found",
+          statusCode: 422,
+        });
+      }
+      console.log("test");
+
+      const buffer = await sharp(req.file.buffer).png().toBuffer();
+      product.brandImage = buffer;
       await product.save();
       res.send({
         message: "image added successfully",
@@ -141,14 +172,14 @@ router.post(
 router.get("/productImg/:id", async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product || !product.image) {
+    if (!product || !product.productImage) {
       return res.status(422).send({
         error: "product not found",
         statusCode: 422,
       });
     }
     res.set("Content-Type", "image/jpg");
-    res.send(product.image);
+    res.send(product.productImage);
   } catch (err) {
     res.status(400).send({
       error: err,
