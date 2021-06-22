@@ -156,4 +156,88 @@ router.get("/productImg/:id", async (req, res, next) => {
   }
 });
 
+router.get("/forsage", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "forsage" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/partner", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "partner" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/force", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "force" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/rockforce", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "rockforce" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/molot", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "molot" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/toptul", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "toptul" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/wmc", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "wmc" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
 module.exports = router;
