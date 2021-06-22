@@ -15,19 +15,25 @@ const schema = new mongoose.Schema({
     type: Number,
     require: true,
   },
+  code: {
+    type: String,
+  },
+  description: {
+    type: String,
+  },
   image: {
-    type: Buffer
-  }
+    type: Buffer,
+  },
 });
 
 //return specific data
 schema.methods.toJSON = function () {
-  const post = this
-  const postObject = post.toObject()
-  delete postObject.__v
-  delete postObject.image
-  return postObject
-}
+  const post = this;
+  const postObject = post.toObject();
+  delete postObject.__v;
+  delete postObject.image;
+  return postObject;
+};
 
 const Product = mongoose.model("Product", schema);
 
