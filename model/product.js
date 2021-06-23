@@ -7,10 +7,6 @@ const schema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  category: {
-    type: String,
-    require: true,
-  },
   price: {
     type: Number,
     require: true,
@@ -26,18 +22,20 @@ const schema = new mongoose.Schema({
   productImage: {
     type: Buffer,
   },
-  brandImage: {
-    type: Buffer,
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Category",
   },
 });
 
 //return specific data
 schema.methods.toJSON = function () {
-  const post = this;
-  const postObject = post.toObject();
-  delete postObject.__v;
-  delete postObject.image;
-  return postObject;
+  const product = this;
+  const productObject = product.toObject();
+  delete productObject.__v;
+  delete productObject.image;
+  return productObject;
 };
 
 const Product = mongoose.model("Product", schema);
