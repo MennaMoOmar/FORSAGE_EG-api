@@ -13,12 +13,14 @@ app.use(cors());
 require("express-async-errors");
 
 /*import routers */
+const categoryRouter = require("./router/category");
 const productRouter = require("./router/product");
 const userRouter = require("./router/user");
 
 require("./db");
 
 /* product */
+app.use("/api/category", categoryRouter);
 app.use("/api/product", productRouter);
 app.use("/api/user", userRouter);
 
