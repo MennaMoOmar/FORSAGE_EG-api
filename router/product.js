@@ -26,10 +26,97 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+////////////////////////////////// Filter by categories ///////////////////////////////
+router.get("/FORSAGE", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "FORSAGE" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/Partner", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "Partner" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/force", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "force" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/rockforce", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "rockforce" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/molot", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "molot" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/toptul", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "toptul" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+router.get("/wmc", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "wmc" }).exec();
+    res.json(products);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 //get product by id
 router.get("/:id", async (req, res, next) => {
   try {
-    const product = await Product.find({ id: req.params.id });
+    const product = await Product.findById(req.params.id);
     res.send(product);
   } catch (err) {
     res.status(422).send({
@@ -183,90 +270,6 @@ router.get("/productImg/:id", async (req, res, next) => {
   } catch (err) {
     res.status(400).send({
       error: err,
-    });
-  }
-});
-
-router.get("/forsage", async (req, res) => {
-  try {
-    const products = await Product.find({ category: "forsage" }).exec();
-    res.json(products);
-  } catch (err) {
-    res.status(422).send({
-      error: err,
-      statusCode: 422,
-    });
-  }
-});
-
-router.get("/partner", async (req, res) => {
-  try {
-    const products = await Product.find({ category: "partner" }).exec();
-    res.json(products);
-  } catch (err) {
-    res.status(422).send({
-      error: err,
-      statusCode: 422,
-    });
-  }
-});
-
-router.get("/force", async (req, res) => {
-  try {
-    const products = await Product.find({ category: "force" }).exec();
-    res.json(products);
-  } catch (err) {
-    res.status(422).send({
-      error: err,
-      statusCode: 422,
-    });
-  }
-});
-
-router.get("/rockforce", async (req, res) => {
-  try {
-    const products = await Product.find({ category: "rockforce" }).exec();
-    res.json(products);
-  } catch (err) {
-    res.status(422).send({
-      error: err,
-      statusCode: 422,
-    });
-  }
-});
-
-router.get("/molot", async (req, res) => {
-  try {
-    const products = await Product.find({ category: "molot" }).exec();
-    res.json(products);
-  } catch (err) {
-    res.status(422).send({
-      error: err,
-      statusCode: 422,
-    });
-  }
-});
-
-router.get("/toptul", async (req, res) => {
-  try {
-    const products = await Product.find({ category: "toptul" }).exec();
-    res.json(products);
-  } catch (err) {
-    res.status(422).send({
-      error: err,
-      statusCode: 422,
-    });
-  }
-});
-
-router.get("/wmc", async (req, res) => {
-  try {
-    const products = await Product.find({ category: "wmc" }).exec();
-    res.json(products);
-  } catch (err) {
-    res.status(422).send({
-      error: err,
-      statusCode: 422,
     });
   }
 });
