@@ -26,6 +26,18 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+//get slice category
+router.get("/slicecategories", async (req, res, next) => {
+  try {
+    const categories = await Category.find({});
+    const slicecategories = categories.slice(0,4);
+    res.send(slicecategories);
+  } catch (err) {
+    err.statusCode = 442;
+    next(err);
+  }
+});
+
 
 //get category by id
 router.get("/:id", async (req, res, next) => {
