@@ -30,7 +30,7 @@ router.get("/", async (req, res, next) => {
 router.get("/slicecategories", async (req, res, next) => {
   try {
     const categories = await Category.find({});
-    const slicecategories = categories.slice(0,4);
+    const slicecategories = categories.slice(0,3);
     res.send(slicecategories);
   } catch (err) {
     err.statusCode = 442;
