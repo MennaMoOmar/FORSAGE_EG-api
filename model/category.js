@@ -10,7 +10,7 @@ const schema = new mongoose.Schema({
 
   categoryImage: {
     type: Buffer,
-  }
+  },
 });
 
 //return specific data
@@ -18,10 +18,9 @@ schema.methods.toJSON = function () {
   const category = this;
   const categoryObject = category.toObject();
   delete categoryObject.__v;
-  delete categoryObject.categoryImage;
+  // delete categoryObject.categoryImage;
   return categoryObject;
 };
-
 
 const Category = mongoose.model("Category", schema);
 

@@ -1,195 +1,200 @@
 /* imports npm */
-const express = require('express')
-const router = express.Router()
-const { body } = require('express-validator')
-const multer = require('multer')
-const sharp = require('sharp')
+const express = require("express");
+const router = express.Router();
+const { body } = require("express-validator");
+const multer = require("multer");
+const sharp = require("sharp");
 
 /* import models */
-const Product = require('../model/product')
+const Product = require("../model/product");
 
 /* import middleware */
-const checkRequiredParams = require('../middleware/checkRequired')
-const validateRequest = require('../middleware/validateRequest')
-const validateImage = require('../middleware/validationImage')
+const checkRequiredParams = require("../middleware/checkRequired");
+const validateRequest = require("../middleware/validateRequest");
+const validateImage = require("../middleware/validationImage");
 
 /* Routes */
 //get all posts
 // api/product
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    const products = await Product.find({})
-    res.send(products)
+    const products = await Product.find({}).populate("categoryId", [
+      "name",
+      "categoryImage",
+    ]);
+    res.send(products);
   } catch (err) {
-    err.statusCode = 442
-    next(err)
+    err.statusCode = 442;
+    next(err);
   }
-})
+});
 
 //get product by id
-router.get('/:id', async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id)
-    res.send(product)
+    const product = await Product.findById(req.params.id).populate(
+      "categoryId",
+      ["name", "categoryImage"]
+    );
+    res.send(product);
   } catch (err) {
     res.status(422).send({
       error: err,
-      statusCode: 422
-    })
+      statusCode: 422,
+    });
   }
-})
+});
 
 //get product by category
-router.get('/category/:id', async (req, res, next) => {
+router.get("/category/:id", async (req, res, next) => {
   try {
-    const product = await Product.find({categoryId: req.params.id});
-    res.send(product)
+    const product = await Product.find({ categoryId: req.params.id }).populate(
+      "categoryId",
+      ["name", "categoryImage"]
+    );
+    res.send(product);
   } catch (err) {
     res.status(422).send({
       error: err,
-      statusCode: 422
-    })
+      statusCode: 422,
+    });
   }
-})
+});
 
 //get product by category 4 only
-router.get('/category/slice/:id', async (req, res, next) => {
+router.get("/category/slice/:id", async (req, res, next) => {
   try {
-    const product = await Product.find({categoryId: req.params.id});
-    const sliceproduct  = product.slice(0,4);
-    res.send(sliceproduct)
+    const product = await Product.find({ categoryId: req.params.id }).populate(
+      "categoryId",
+      ["name", "categoryImage"]
+    );
+    const sliceproduct = product.slice(0, 4);
+    res.send(sliceproduct);
   } catch (err) {
     res.status(422).send({
       error: err,
-      statusCode: 422
-    })
+      statusCode: 422,
+    });
   }
-})
+});
 
 //add product
 router.post(
-  '/addproduct',
-  checkRequiredParams(['name', 'price', 'code', 'description', 'categoryId']),
-  validateRequest([body('name').isLength({ min: 3, max: 20 })]),
+  "/addproduct/",
+  checkRequiredParams(["name", "price", "code", "description", "categoryId"]),
+  validateRequest([body("name").isLength({ min: 3, max: 20 })]),
   async (req, res, next) => {
     const createdProduct = new Product({
       name: req.body.name,
       price: req.body.price,
       code: req.body.code,
       description: req.body.description,
-      categoryId: req.body.categoryId
-    })
-    const product = await createdProduct.save()
-    res.status(200).send(product)
+      categoryId: req.body.categoryId,
+    });
+    const product = await createdProduct.save();
+    res.status(200).send(product);
   }
-)
+);
 
 //edit product
-router.patch('/:id', async (req, res, next) => {
+router.patch("/:id", async (req, res, next) => {
   try {
-    const id = req.params.id
-    let product = await Product.findById(id)
+    const id = req.params.id;
+    let product = await Product.findById(id);
+
     await product
       .update({
-        name: req.body.name,
-        price: req.body.price,
-        code: req.body.code,
-        description: req.body.description,
-        categoryId: req.body.categoryId
+        name: req.body.name || product.name,
+        price: req.body.price || product.price,
+        code: req.body.code || product.code,
+        description: req.body.description || product.description,
+        categoryId: req.body.categoryId || product.categoryId,
       })
-      .exec()
-    res.status(200).send({ message: 'product changed succesfuly' })
+      .exec();
+    res.status(200).send({ message: "product changed succesfuly" });
   } catch (err) {
     res.status(422).send({
       error: err,
-      statusCode: 422
-    })
+      statusCode: 422,
+    });
   }
-})
+});
 
 //delete product
-router.delete('/:id', async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id)
-    await product.remove()
-    res.status(200).send({ message: 'product removed succesfuly' })
+    const product = await Product.findById(req.params.id);
+    await product.remove();
+    res.status(200).send({ message: "product removed succesfuly" });
   } catch (err) {
     res.status(422).send({
       error: err,
-      statusCode: 422
-    })
+      statusCode: 422,
+    });
   }
-})
+});
 
 /* image */
 const upload = multer({
   limits: {
-    fileSize: 5000000
+    fileSize: 5000000,
   },
-  fileFilter (req, file, cb) {
+  fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(jpg|jpeg|png|PNG|JPG)$/)) {
-      return cb(new Error('please upload image'))
+      return cb(new Error("please upload image"));
     }
-    cb(undefined, true)
-  }
-})
+    cb(undefined, true);
+  },
+});
 
 //add image by id
 router.post(
-  '/productImg/:id',
-  upload.single('productImage'),
+  "/productImg/:id",
+  upload.single("productImage"),
   async (req, res, next) => {
     try {
-      const product = await Product.findById(req.params.id)
+      const product = await Product.findById(req.params.id);
       if (!product) {
         return res.status(422).send({
-          error: 'product not found',
-          statusCode: 422
-        })
+          error: "product not found",
+          statusCode: 422,
+        });
       }
-      const buffer = await sharp(req.file.buffer)
-        .png()
-        .toBuffer()
-      product.productImage = buffer
-      await product.save()
+      const buffer = await sharp(req.file.buffer).png().toBuffer();
+      product.productImage = buffer;
+      await product.save();
       res.send({
-        message: 'image added successfully'
-      })
+        message: "image added successfully",
+      });
     } catch (err) {
       res.status(400).send({
-        error: err
-      })
+        error: err,
+      });
     }
   },
   validateImage
-)
-
+);
 
 //get image by id
-router.get('/productImg/:id', async (req, res, next) => {
+router.get("/productImg/:id", async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id)
+    const product = await Product.findById(req.params.id);
     if (!product || !product.productImage) {
       return res.status(422).send({
-        error: 'product not found',
-        statusCode: 422
-      })
+        error: "product not found",
+        statusCode: 422,
+      });
     }
-    res.set('Content-Type', 'image/jpg')
-    res.send(product.productImage)
+    res.set("Content-Type", "image/jpg");
+    res.send(product.productImage);
   } catch (err) {
     res.status(400).send({
-      error: err
-    })
+      error: err,
+    });
   }
-})
+});
 
-module.exports = router
-
-
-
-
-
+module.exports = router;
 
 // ////////////////////////////////// Filter by categories ///////////////////////////////
 // router.get('/FORSAGE', async (req, res) => {

@@ -22,7 +22,8 @@ router.get("/", async (req, res, next) => {
     res.send(categories);
   } catch (err) {
     err.statusCode = 442;
-    next(err);
+    res.send("server error");
+    // next(err);
   }
 });
 
@@ -30,14 +31,13 @@ router.get("/", async (req, res, next) => {
 router.get("/slicecategories", async (req, res, next) => {
   try {
     const categories = await Category.find({});
-    const slicecategories = categories.slice(0,3);
+    const slicecategories = categories.slice(0, 3);
     res.send(slicecategories);
   } catch (err) {
     err.statusCode = 442;
     next(err);
   }
 });
-
 
 //get category by id
 router.get("/:id", async (req, res, next) => {
@@ -56,29 +56,37 @@ router.get("/:id", async (req, res, next) => {
 router.post(
   "/addcategory",
   checkRequiredParams(["name"]),
-  validateRequest([
-    body("name").isLength({ min: 3, max: 20 }),
-  ]),
+  validateRequest([body("name").isLength({ min: 3, max: 20 })]),
   async (req, res, next) => {
-    const createdCategory = new Category({
-      name: req.body.name
-    });
-    const category = await createdCategory.save();
-    res.status(200).send(category);
+    try {
+      const { name } = req.body;
+
+      // check if admin exists
+      const isExist = await Category.findOne({ name });
+      if (isExist) {
+        return res.status(400).json({ msg: " category already exists!!" });
+      }
+      const createdCategory = new Category({
+        name,
+      });
+      const category = await createdCategory.save();
+      res.status(200).send(category);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send("server error");
+    }
   }
 );
 
-//edit category
+//edit category name
 router.patch("/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
     let category = await Category.findById(id);
-    console.log(req.body)
-    await category
-      .update({
-        name: req.body.name || category.name,
-      })
-      .exec();
+    console.log(req.body);
+    await Category.update({
+      name: req.body.name || category.name,
+    }).exec();
     res.status(200).send({ message: "category changed succesfuly" });
   } catch (err) {
     res.status(422).send({
@@ -142,7 +150,6 @@ router.post(
   },
   validateImage
 );
-
 
 //get image by id
 router.get("/categoryImg/:id", async (req, res, next) => {
