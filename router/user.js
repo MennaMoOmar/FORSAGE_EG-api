@@ -19,11 +19,17 @@ router.post(
     }
 
     try {
-      const { email, password, isAdmin } = req.body;
+      const { email, password, isAdmin, name } = req.body;
 
       // check if admin exists
-      const isTaken = await User.findOne({ email });
-      if (isTaken) {
+      const isEmailTaken = await User.findOne({ email });
+      if (isEmailTaken) {
+        return res.status(400).json({ msg: " Admin already exists!!" });
+      }
+
+      // check if admin exists
+      const isNameTaken = await User.findOne({ name });
+      if (isNameTaken) {
         return res.status(400).json({ msg: " Admin already exists!!" });
       }
 
@@ -34,6 +40,7 @@ router.post(
         email,
         password: HashedPassword,
         isAdmin,
+        name,
       });
 
       res.json(user);
@@ -46,7 +53,7 @@ router.post(
 
 router.post(
   "/login",
-  body("email").isEmail().withMessage("invalid email"),
+  body("name").exists().withMessage("name is required"),
   body("password").exists().withMessage("password is required"),
   async (req, res) => {
     const errors = validationResult(req);
@@ -55,10 +62,10 @@ router.post(
     }
 
     try {
-      const { email, password } = req.body;
+      const { name, password } = req.body;
 
       // check if user does not exist
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ name });
       if (!user) {
         return res.status(400).json({ msg: "invalid email or password" });
       }

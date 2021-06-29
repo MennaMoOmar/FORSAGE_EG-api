@@ -28,3 +28,5 @@ app.use("/api/user", userRouter);
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
+
+// mongodb://localhost:27017/forsage
