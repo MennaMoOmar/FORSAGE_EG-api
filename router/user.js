@@ -5,6 +5,7 @@ const { body, validationResult } = require("express-validator");
 const User = require("../model/user");
 const router = express.Router();
 const { jwtSecret } = require("../config");
+const auth = require("../middleware/auth");
 
 router.post(
   "/register",
@@ -86,5 +87,17 @@ router.post(
     console.log(req.body);
   }
 );
+
+//api /user
+router.get("/", auth, async (req, res) => {
+  try {
+    const id = req.id;
+    const user = await User.findById(id).select("-password");
+    res.json(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("server error");
+  }
+});
 
 module.exports = router;
