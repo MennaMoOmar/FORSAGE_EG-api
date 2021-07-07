@@ -34,7 +34,7 @@ schema.methods.toJSON = function () {
   const product = this;
   const productObject = product.toObject();
   delete productObject.__v;
-  delete productObject.productImage;
+  // delete productObject.productImage;
   return productObject;
 };
 
