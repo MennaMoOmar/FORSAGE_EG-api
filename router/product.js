@@ -82,7 +82,7 @@ router.get("/category/slice/:id", async (req, res, next) => {
 router.post(
   "/addproduct/",
   checkRequiredParams(["name", "price", "code", "description", "categoryId"]),
-  validateRequest([body("name").isLength({ min: 3, max: 20 })]),
+  validateRequest([body("name").isLength({ min: 3, max: 100 })]),
   async (req, res, next) => {
     const createdProduct = new Product({
       name: req.body.name,
