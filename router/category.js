@@ -56,7 +56,7 @@ router.get("/:id", async (req, res, next) => {
 router.post(
   "/addcategory",
   checkRequiredParams(["name"]),
-  validateRequest([body("name").isLength({ min: 3, max: 20 })]),
+  validateRequest([body("name").isLength({ min: 2, max: 20 })]),
   async (req, res, next) => {
     try {
       const { name } = req.body;
