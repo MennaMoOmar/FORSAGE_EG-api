@@ -61,6 +61,19 @@ router.get("/category/:id", async (req, res, next) => {
   }
 });
 
+//get product by code
+router.get("/code/:code", async (req, res, next) => {
+  try {
+    const product = await Product.findOne({ code: req.params.code });
+    res.send(product);
+  } catch (err) {
+    res.status(422).send({
+      error: err,
+      statusCode: 422,
+    });
+  }
+});
+
 //get product by category 4 only
 router.get("/category/slice/:id", async (req, res, next) => {
   try {
